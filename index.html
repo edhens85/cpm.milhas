@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CALCULADORA DE TRANSFERÊNCIA BONIFICADA</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,6 +21,12 @@
         }
         input {
             text-transform: uppercase;
+            font-size: 16px !important; /* Evita zoom automático do iOS Safari ao tocar no campo */
+        }
+        @media (min-width: 640px) {
+            input {
+                font-size: 12px !important;
+            }
         }
         .font-mono-num {
             font-variant-numeric: tabular-nums;
@@ -76,14 +82,14 @@
                 <div class="flex flex-wrap items-center gap-1 sm:gap-1.5 min-w-0">
                     <span class="text-white font-semibold">DE:</span>
                     <input type="text" id="input-de" value="LIVELO" maxlength="16"
-                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-xs sm:text-[10px] font-bold text-emerald-300 uppercase w-[4.2rem] sm:w-20 focus:outline-none focus:border-emerald-400">
+                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-base sm:text-[10px] font-bold text-emerald-300 uppercase w-[4.8rem] sm:w-20 focus:outline-none focus:border-emerald-400">
                     <i class="ph-bold ph-arrow-right text-white text-[10px] shrink-0"></i>
                     <span class="text-white font-semibold">PARA:</span>
                     <input type="text" id="input-para" value="LATAM" maxlength="16"
-                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-xs sm:text-[10px] font-bold text-indigo-300 uppercase w-[4.2rem] sm:w-20 focus:outline-none focus:border-indigo-400">
+                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-base sm:text-[10px] font-bold text-indigo-300 uppercase w-[4.8rem] sm:w-20 focus:outline-none focus:border-indigo-400">
                     <span class="text-white font-semibold">DATA:</span>
-                    <input type="text" id="input-data" inputmode="numeric" placeholder="DD/MM/AAAA" maxlength="10"
-                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-xs sm:text-[10px] font-mono-num font-bold text-white placeholder-slate-400 w-[5.8rem] sm:w-24 text-center focus:outline-none focus:border-sky-400">
+                    <input type="text" id="input-data" inputmode="numeric" pattern="[0-9]*" placeholder="DD/MM/AAAA" maxlength="10"
+                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-base sm:text-[10px] font-mono-num font-bold text-white placeholder-slate-400 w-[6.8rem] sm:w-24 text-center focus:outline-none focus:border-sky-400">
                 </div>
 
                 <!-- Ações: Link e Limpar alinhados à direita -->
@@ -125,8 +131,19 @@
                             </label>
                             <div class="col-span-6 relative">
                                 <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
-                                <input type="text" id="input-cpm-estoque" inputmode="numeric" placeholder="0,00"
-                                    class="campo-editavel campo-fluxo w-full h-8 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                <input type="text" id="input-cpm-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
+                                    class="campo-editavel campo-fluxo w-full h-9 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
+                            </div>
+                        </div>
+
+                        <!-- Campo Editável 2: Pontos usados -->
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <label for="input-pontos-estoque" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                                PONTOS USADOS
+                            </label>
+                            <div class="col-span-6">
+                                <input type="text" id="input-pontos-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0"
+                                    class="campo-editavel campo-fluxo w-full h-9 sm:h-7 px-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
                             </div>
                         </div>
 
@@ -176,8 +193,8 @@
                                     QTDE DE PONTOS
                                 </label>
                                 <div class="col-span-6">
-                                    <input type="text" id="input-pontos-carrinho" inputmode="numeric" placeholder="0"
-                                        class="campo-editavel campo-fluxo w-full h-8 sm:h-7 px-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                    <input type="text" id="input-pontos-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0"
+                                        class="campo-editavel campo-fluxo w-full h-9 sm:h-7 px-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
                                 </div>
                             </div>
 
@@ -188,8 +205,8 @@
                                 </label>
                                 <div class="col-span-6 relative">
                                     <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
-                                    <input type="text" id="input-custo-carrinho" inputmode="numeric" placeholder="0,00"
-                                        class="campo-editavel campo-fluxo w-full h-8 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                    <input type="text" id="input-custo-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
+                                        class="campo-editavel campo-fluxo w-full h-9 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
                                 </div>
                             </div>
                         </div>
@@ -254,8 +271,8 @@
                                 BÔNUS
                             </label>
                             <div class="col-span-5 relative">
-                                <input type="text" id="input-bonus" inputmode="decimal" placeholder="0"
-                                    class="campo-editavel campo-fluxo w-full h-8 sm:h-7 pl-2 pr-6 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                <input type="text" id="input-bonus" inputmode="numeric" pattern="[0-9]*" placeholder="0"
+                                    class="campo-editavel campo-fluxo w-full h-9 sm:h-7 pl-2 pr-6 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
                                 <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-emerald-700">%</span>
                             </div>
                         </div>
