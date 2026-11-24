@@ -61,111 +61,104 @@
         }
     </style>
 </head>
-<body class="min-h-[100dvh] py-2 px-2 sm:px-4 flex flex-col justify-start sm:justify-center overflow-x-hidden">
+<body class="min-h-[100dvh] py-1.5 px-1.5 sm:px-3 flex flex-col justify-start sm:justify-center overflow-x-hidden">
 
-    <div class="w-full max-w-[660px] mx-auto border-2 border-slate-900 rounded-2xl overflow-hidden bg-slate-100 shadow-md">
+    <div class="w-full max-w-[560px] mx-auto border-2 border-slate-900 rounded-2xl overflow-hidden bg-slate-100 shadow-md">
 
         <!-- Cabeçalho -->
-        <header class="bg-slate-900 text-white px-2.5 sm:px-3 py-2.5">
-            <!-- Título centralizado -->
-            <div class="flex items-center justify-center gap-1.5 mb-2 pb-1.5 border-b border-slate-800">
-                <div class="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0">
-                    <i class="ph-bold ph-calculator text-sm"></i>
+        <header class="bg-slate-900 text-white px-2 sm:px-2.5 py-1.5">
+            <!-- Linha 1: Título centralizado e botões Link / Limpar no canto superior direito -->
+            <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-1 mb-1.5 pb-1 border-b border-slate-800">
+                <div aria-hidden="true"></div>
+                <div class="flex items-center justify-center gap-1 min-w-0">
+                    <div class="w-4 h-4 rounded bg-emerald-500/20 border border-emerald-400/30 hidden sm:flex items-center justify-center text-emerald-400 shrink-0">
+                        <i class="ph-bold ph-calculator text-[11px]"></i>
+                    </div>
+                    <h1 class="text-[9.5px] sm:text-[11px] font-extrabold tracking-tight text-center leading-tight">
+                        CALCULADORA DE TRANSFERÊNCIA BONIFICADA
+                    </h1>
                 </div>
-                <h1 class="text-xs sm:text-sm font-extrabold tracking-tight text-center leading-tight">
-                    CALCULADORA DE TRANSFERÊNCIA BONIFICADA
-                </h1>
-            </div>
-
-            <!-- Linha com De / Para / Data e botões Link / Limpar alinhados à direita -->
-            <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-[11px] text-white">
-                <div class="flex flex-wrap items-center gap-1 sm:gap-1.5 min-w-0">
-                    <span class="text-white font-semibold">DE:</span>
-                    <input type="text" id="input-de" value="LIVELO" maxlength="16"
-                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-base sm:text-[10px] font-bold text-emerald-300 uppercase w-[4.8rem] sm:w-20 focus:outline-none focus:border-emerald-400">
-                    <i class="ph-bold ph-arrow-right text-white text-[10px] shrink-0"></i>
-                    <span class="text-white font-semibold">PARA:</span>
-                    <input type="text" id="input-para" value="LATAM" maxlength="16"
-                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-base sm:text-[10px] font-bold text-indigo-300 uppercase w-[4.8rem] sm:w-20 focus:outline-none focus:border-indigo-400">
-                    <span class="text-white font-semibold">DATA:</span>
-                    <input type="text" id="input-data" inputmode="numeric" pattern="[0-9]*" placeholder="DD/MM/AAAA" maxlength="10"
-                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-base sm:text-[10px] font-mono-num font-bold text-white placeholder-slate-400 w-[6.8rem] sm:w-24 text-center focus:outline-none focus:border-sky-400">
-                </div>
-
-                <!-- Ações: Link e Limpar alinhados à direita -->
-                <div class="flex items-center gap-1.5 shrink-0 ml-auto">
-                    <button type="button" id="btn-link" title="COPIAR LINK COMPARTILHÁVEL ZERADO"
-                        class="h-7 sm:h-6 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-[11px] font-bold uppercase transition flex items-center gap-1 cursor-pointer">
-                        <i class="ph-bold ph-link text-xs"></i>
+                <div class="flex items-center justify-end gap-1 shrink-0">
+                    <button type="button" id="btn-link" title="COPIAR LINK CURTO"
+                        class="h-5 px-1.5 rounded bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-[9px] font-bold uppercase transition flex items-center gap-0.5 cursor-pointer">
+                        <i class="ph-bold ph-link text-[10px]"></i>
                         <span>LINK</span>
                     </button>
                     <button type="button" id="btn-limpar" title="ZERAR TODOS OS CAMPOS"
-                        class="h-7 sm:h-6 px-2 rounded-lg bg-slate-800 hover:bg-rose-950/80 active:scale-95 text-slate-200 hover:text-rose-200 border border-slate-700 hover:border-rose-500/40 text-[11px] font-bold uppercase transition flex items-center gap-1 cursor-pointer">
-                        <i class="ph-bold ph-eraser text-xs text-rose-400"></i>
+                        class="h-5 px-1.5 rounded bg-slate-800 hover:bg-rose-950/80 active:scale-95 text-slate-200 hover:text-rose-200 border border-slate-700 hover:border-rose-500/40 text-[9px] font-bold uppercase transition flex items-center gap-0.5 cursor-pointer">
+                        <i class="ph-bold ph-eraser text-[10px] text-rose-400"></i>
                         <span>LIMPAR</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- Linha 2: DE, PARA e DATA em linha única sem quebrar no celular -->
+            <div class="flex items-center justify-between gap-1 text-[10px] text-white">
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-white font-semibold shrink-0">DE:</span>
+                    <input type="text" id="input-de" value="LIVELO" maxlength="16"
+                        class="bg-slate-800 border border-slate-700 rounded px-1 py-0 text-base sm:text-[10px] font-bold text-emerald-300 uppercase w-[4rem] sm:w-18 text-center leading-tight focus:outline-none focus:border-emerald-400">
+                </div>
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-white font-semibold shrink-0">PARA:</span>
+                    <input type="text" id="input-para" value="LATAM" maxlength="16"
+                        class="bg-slate-800 border border-slate-700 rounded px-1 py-0 text-base sm:text-[10px] font-bold text-indigo-300 uppercase w-[4rem] sm:w-18 text-center leading-tight focus:outline-none focus:border-indigo-400">
+                </div>
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-white font-semibold shrink-0">DATA:</span>
+                    <input type="text" id="input-data" inputmode="numeric" pattern="[0-9]*" placeholder="DD/MM/AAAA" maxlength="10"
+                        class="bg-slate-800 border border-slate-700 rounded px-1 py-0 text-base sm:text-[10px] font-mono-num font-bold text-white placeholder-slate-400 w-[6rem] sm:w-22 text-center leading-tight focus:outline-none focus:border-sky-400">
                 </div>
             </div>
         </header>
 
         <!-- Grid Principal: Esquerda (1. Estoque + 2. Carrinho) | Direita (3. Destino) -->
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-2.5 p-2 sm:p-2.5 items-stretch">
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-1.5 p-1.5 sm:p-2 items-stretch">
 
             <!-- COLUNA ESQUERDA: ORIGEM -->
-            <div class="space-y-2.5 flex flex-col min-w-0">
+            <div class="space-y-1.5 flex flex-col min-w-0">
 
                 <!-- 1. ESTOQUE -->
-                <section class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs min-w-0">
-                    <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+                <section class="bg-white border border-slate-200 rounded-xl p-2 shadow-2xs min-w-0">
+                    <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-100">
                         <div class="flex items-center gap-1.5">
-                            <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0">1</span>
-                            <h2 class="text-sm font-black uppercase tracking-wider text-slate-900">ESTOQUE</h2>
+                            <span class="w-4 h-4 rounded bg-slate-900 text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">1</span>
+                            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900">ESTOQUE</h2>
                         </div>
                     </div>
 
-                    <div class="space-y-2 sm:space-y-1.5">
+                    <div class="space-y-1">
                         <!-- Campo Editável 1: CPM Estoque -->
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <label for="input-cpm-estoque" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <label for="input-cpm-estoque" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                 CPM
                             </label>
                             <div class="col-span-6 relative">
-                                <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
+                                <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
                                 <input type="text" id="input-cpm-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
-                                    class="campo-editavel campo-fluxo w-full h-9 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
+                                    class="campo-editavel campo-fluxo w-full h-7 sm:h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
                             </div>
                         </div>
 
                         <!-- Campo Editável 2: Pontos usados -->
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <label for="input-pontos-estoque" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <label for="input-pontos-estoque" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                 PONTOS USADOS
                             </label>
                             <div class="col-span-6">
                                 <input type="text" id="input-pontos-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0"
-                                    class="campo-editavel campo-fluxo w-full h-9 sm:h-7 px-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
-                            </div>
-                        </div>
-
-                        <!-- Campo Editável 2: Pontos usados -->
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <label for="input-pontos-estoque" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
-                                PONTOS USADOS
-                            </label>
-                            <div class="col-span-6">
-                                <input type="text" id="input-pontos-estoque" inputmode="numeric" placeholder="0"
-                                    class="campo-editavel campo-fluxo w-full h-8 sm:h-7 px-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                    class="campo-editavel campo-fluxo w-full h-7 sm:h-6 px-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
                             </div>
                         </div>
 
                         <!-- Campo Calculado: Subtotal Estoque -->
-                        <div class="grid grid-cols-12 items-center gap-1.5 pt-0.5">
-                            <span class="col-span-6 text-xs sm:text-[13px] font-black uppercase text-slate-800">
+                        <div class="grid grid-cols-12 items-center gap-1 pt-0.5">
+                            <span class="col-span-6 text-[11px] sm:text-xs font-black uppercase text-slate-800 leading-tight">
                                 SUBTOTAL
                             </span>
                             <div class="col-span-6">
-                                <div class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-between font-mono-num text-xs sm:text-[13px] font-black text-slate-900">
-                                    <span class="text-[11px] font-bold text-slate-500">R$</span>
+                                <div class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-black text-slate-900">
+                                    <span class="text-[10px] font-bold text-slate-500">R$</span>
                                     <span id="out-subtotal-estoque">0,00</span>
                                 </div>
                             </div>
@@ -174,65 +167,65 @@
                 </section>
 
                 <!-- 2. COMPRA NO CARRINHO -->
-                <section class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs flex-1 flex flex-col justify-between min-w-0">
+                <section class="bg-white border border-slate-200 rounded-xl p-2 shadow-2xs flex-1 flex flex-col justify-between min-w-0">
                     <div>
-                        <div class="flex items-center justify-between gap-1 mb-2 pb-1.5 border-b border-slate-100">
+                        <div class="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-100">
                             <div class="flex items-center gap-1 min-w-0">
-                                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-slate-900 text-white text-[10px] sm:text-[11px] font-extrabold flex items-center justify-center shrink-0">2</span>
-                                <h2 class="text-xs sm:text-[13px] font-black uppercase tracking-tight text-slate-900 leading-tight">COMPRA NO CARRINHO</h2>
+                                <span class="w-4 h-4 rounded bg-slate-900 text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">2</span>
+                                <h2 class="text-[11px] sm:text-xs font-black uppercase tracking-tight text-slate-900 leading-tight">COMPRA NO CARRINHO</h2>
                             </div>
-                            <span id="badge-cpm-carrinho" class="text-[9px] sm:text-[10px] font-mono-num font-semibold uppercase text-slate-500 border border-slate-300 rounded-full px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                            <span id="badge-cpm-carrinho" class="text-[9px] font-mono-num font-semibold uppercase text-slate-500 border border-slate-300 rounded-full px-1.5 py-0 shrink-0 whitespace-nowrap">
                                 CPM R$ 0,00
                             </span>
                         </div>
 
-                        <div class="space-y-2 sm:space-y-1.5">
+                        <div class="space-y-1">
                             <!-- Campo Editável 3: Qtde de pontos -->
-                            <div class="grid grid-cols-12 items-center gap-1.5">
-                                <label for="input-pontos-carrinho" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                            <div class="grid grid-cols-12 items-center gap-1">
+                                <label for="input-pontos-carrinho" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                     QTDE DE PONTOS
                                 </label>
                                 <div class="col-span-6">
                                     <input type="text" id="input-pontos-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0"
-                                        class="campo-editavel campo-fluxo w-full h-9 sm:h-7 px-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
+                                        class="campo-editavel campo-fluxo w-full h-7 sm:h-6 px-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
                                 </div>
                             </div>
 
                             <!-- Campo Editável 4: Preço de compra -->
-                            <div class="grid grid-cols-12 items-center gap-1.5">
-                                <label for="input-custo-carrinho" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                            <div class="grid grid-cols-12 items-center gap-1">
+                                <label for="input-custo-carrinho" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                     PREÇO DE COMPRA
                                 </label>
                                 <div class="col-span-6 relative">
-                                    <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
+                                    <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
                                     <input type="text" id="input-custo-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
-                                        class="campo-editavel campo-fluxo w-full h-9 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
+                                        class="campo-editavel campo-fluxo w-full h-7 sm:h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Campos Calculados: Custo origem e CPM ORIGEM -->
-                    <div class="mt-2 pt-2 border-t border-slate-100 space-y-2 sm:space-y-1.5">
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <span class="col-span-6 text-[11px] font-semibold uppercase text-slate-600">
+                    <div class="mt-1.5 pt-1.5 border-t border-slate-100 space-y-1">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <span class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-600 leading-tight">
                                 CUSTO ORIGEM
                             </span>
                             <div class="col-span-6">
-                                <div class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-between font-mono-num text-xs font-bold text-slate-700">
-                                    <span class="text-[11px] font-semibold text-slate-400">R$</span>
+                                <div class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-bold text-slate-700">
+                                    <span class="text-[10px] font-semibold text-slate-400">R$</span>
                                     <span id="out-custo-origem">0,00</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <span class="col-span-6 text-xs sm:text-[13px] font-black uppercase text-slate-900">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <span class="col-span-6 text-[11px] sm:text-xs font-black uppercase text-slate-900 leading-tight">
                                 CPM ORIGEM
                             </span>
                             <div class="col-span-6">
-                                <div class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-between font-mono-num text-xs sm:text-[13px] font-black text-slate-900">
-                                    <span class="text-[11px] font-bold text-slate-500">R$</span>
+                                <div class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-black text-slate-900">
+                                    <span class="text-[10px] font-bold text-slate-500">R$</span>
                                     <span id="out-cpm-origem">0,00</span>
                                 </div>
                             </div>
@@ -242,62 +235,62 @@
             </div>
 
             <!-- COLUNA DIREITA: 3. DESTINO -->
-            <section class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs flex flex-col justify-between min-w-0">
+            <section class="bg-white border border-slate-200 rounded-xl p-2 shadow-2xs flex flex-col justify-between min-w-0">
                 <div>
-                    <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+                    <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-100">
                         <div class="flex items-center gap-1.5">
-                            <span class="w-5 h-5 rounded-md bg-indigo-600 text-white text-[11px] font-extrabold flex items-center justify-center">3</span>
-                            <h2 class="text-sm font-black uppercase tracking-wider text-slate-900">DESTINO</h2>
+                            <span class="w-4 h-4 rounded bg-indigo-600 text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">3</span>
+                            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900">DESTINO</h2>
                         </div>
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-1">
                         <!-- Campo Calculado: Milhas recebidas -->
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <span class="col-span-7 text-[11px] font-semibold uppercase text-slate-600">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <span class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-600 leading-tight">
                                 MILHAS RECEBIDAS
                             </span>
-                            <div class="col-span-5">
+                            <div class="col-span-6">
                                 <div id="out-milhas-enviadas"
-                                    class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-end font-mono-num text-xs font-bold">
+                                    class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-bold">
                                     0
                                 </div>
                             </div>
                         </div>
 
                         <!-- Campo Editável 5: Bônus -->
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <label for="input-bonus" class="col-span-7 text-[11px] font-semibold uppercase text-slate-700">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <label for="input-bonus" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                 BÔNUS
                             </label>
-                            <div class="col-span-5 relative">
+                            <div class="col-span-6 relative">
                                 <input type="text" id="input-bonus" inputmode="numeric" pattern="[0-9]*" placeholder="0"
-                                    class="campo-editavel campo-fluxo w-full h-9 sm:h-7 pl-2 pr-6 rounded-lg text-right font-mono-num text-base sm:text-xs font-bold">
-                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-emerald-700">%</span>
+                                    class="campo-editavel campo-fluxo w-full h-7 sm:h-6 pl-2 pr-5 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-bold text-emerald-700">%</span>
                             </div>
                         </div>
 
                         <!-- Campo Calculado: Milhas bônus -->
-                        <div class="grid grid-cols-12 items-center gap-1.5">
-                            <span class="col-span-7 text-[11px] font-semibold uppercase text-slate-600">
+                        <div class="grid grid-cols-12 items-center gap-1">
+                            <span class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-600 leading-tight">
                                 MILHAS BÔNUS
                             </span>
-                            <div class="col-span-5">
+                            <div class="col-span-6">
                                 <div id="out-pontos-bonus"
-                                    class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-end font-mono-num text-xs font-bold text-emerald-700">
+                                    class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-bold text-emerald-700">
                                     0
                                 </div>
                             </div>
                         </div>
 
                         <!-- Campo Calculado: TOTAL DE MILHAS -->
-                        <div class="grid grid-cols-12 items-center gap-1.5 pt-0.5">
-                            <div class="col-span-7">
-                                <span class="text-xs sm:text-[13px] font-black uppercase text-slate-900 block">TOTAL DE MILHAS</span>
+                        <div class="grid grid-cols-12 items-center gap-1 pt-0.5">
+                            <div class="col-span-6">
+                                <span class="text-[11px] sm:text-xs font-black uppercase text-slate-900 block leading-tight">TOTAL DE MILHAS</span>
                             </div>
-                            <div class="col-span-5">
+                            <div class="col-span-6">
                                 <div id="out-total-milhas"
-                                    class="campo-calculado w-full h-8 px-2 rounded-lg flex items-center justify-end font-mono-num text-xs sm:text-[13px] font-black text-indigo-800">
+                                    class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-black text-indigo-800">
                                     0
                                 </div>
                             </div>
@@ -306,22 +299,22 @@
                 </div>
 
                 <!-- RESULTADO EFETIVO: CPM FINAL em roxo claro -->
-                <div class="mt-3 pt-2.5 border-t border-purple-200/70">
-                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 text-slate-900 shadow-2xs">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-purple-800">
+                <div class="mt-2 pt-1.5 border-t border-purple-200/70">
+                    <div class="bg-purple-50 border border-purple-200 rounded-xl px-2.5 py-2 text-slate-900 shadow-2xs">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-[9px] font-bold uppercase tracking-wider text-purple-800">
                                 RESULTADO EFETIVO
                             </span>
                         </div>
                         <div class="flex items-baseline justify-between gap-2">
-                            <span class="text-sm sm:text-base font-black uppercase tracking-wide text-purple-950">
+                            <span class="text-xs sm:text-sm font-black uppercase tracking-wide text-purple-950">
                                 CPM FINAL
                             </span>
                             <div class="text-right">
-                                <span id="out-cpm-final" class="font-mono-num text-3xl sm:text-[32px] font-black tracking-tight text-purple-800 block leading-none">
+                                <span id="out-cpm-final" class="font-mono-num text-2xl sm:text-[28px] font-black tracking-tight text-purple-800 block leading-none">
                                     R$ 0,00
                                 </span>
-                                <span class="text-[10px] font-semibold uppercase text-purple-700/85">
+                                <span class="text-[9px] font-semibold uppercase text-purple-700/85">
                                     POR MILHEIRO
                                 </span>
                             </div>
@@ -613,24 +606,14 @@
 
             // Botões de ação
             document.getElementById('btn-link')?.addEventListener('click', () => {
-                const d = recalculate();
-                // Gera URL mais curta possível (como já abre zerada por padrão, omite parâmetros redundantes)
+                // Gera o link mais curto possível (URL limpa sem parâmetros extras)
                 const baseHref = window.location.href.split('?')[0].split('#')[0];
-                const url = new URL(baseHref && baseHref.startsWith('http') ? baseHref : 'https://calculadora-transferencia-bonificada.app/');
+                const cleanUrl = (baseHref && baseHref.startsWith('http')
+                    ? baseHref
+                    : 'https://edhens85.github.io/cpm'
+                ).replace(/\/index\.html$/i, '').replace(/\/$/, '');
 
-                if (d.de && d.de !== DEFAULT_STATE.de) {
-                    url.searchParams.set('de', d.de);
-                }
-                if (d.para && d.para !== DEFAULT_STATE.para) {
-                    url.searchParams.set('para', d.para);
-                }
-                if (d.data) {
-                    url.searchParams.set('d', d.data);
-                }
-
-                // Remove barra final se não houver query string para deixar ainda mais limpo
-                const shortUrl = url.search ? url.toString() : url.toString().replace(/\/$/, '');
-                copyText(shortUrl, 'LINK CURTO COPIADO!');
+                copyText(cleanUrl, 'LINK CURTO COPIADO!');
             });
 
             document.getElementById('btn-limpar')?.addEventListener('click', () => {
