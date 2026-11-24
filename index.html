@@ -129,7 +129,7 @@
 
                     <div class="space-y-1">
                         <!-- Campo Editável 1: CPM Estoque -->
-                        <div class="grid grid-cols-12 items-center gap-1">
+                        <form class="form-fluxo grid grid-cols-12 items-center gap-1" data-flow-idx="0" action="javascript:void(0);">
                             <label for="input-cpm-estoque" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                 CPM
                             </label>
@@ -138,10 +138,10 @@
                                 <input type="text" id="input-cpm-estoque" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0,00"
                                     class="campo-editavel campo-fluxo w-full h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-xs font-bold">
                             </div>
-                        </div>
+                        </form>
 
                         <!-- Campo Editável 2: Pontos usados -->
-                        <div class="grid grid-cols-12 items-center gap-1">
+                        <form class="form-fluxo grid grid-cols-12 items-center gap-1" data-flow-idx="1" action="javascript:void(0);">
                             <label for="input-pontos-estoque" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                 PONTOS USADOS
                             </label>
@@ -149,7 +149,7 @@
                                 <input type="text" id="input-pontos-estoque" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0"
                                     class="campo-editavel campo-fluxo w-full h-6 px-2 rounded-md text-right font-mono-num text-xs font-bold">
                             </div>
-                        </div>
+                        </form>
 
                         <!-- Campo Calculado: Subtotal Estoque -->
                         <div class="grid grid-cols-12 items-center gap-1 pt-0.5">
@@ -181,7 +181,7 @@
 
                         <div class="space-y-1">
                             <!-- Campo Editável 3: Qtde de pontos -->
-                            <div class="grid grid-cols-12 items-center gap-1">
+                            <form class="form-fluxo grid grid-cols-12 items-center gap-1" data-flow-idx="2" action="javascript:void(0);">
                                 <label for="input-pontos-carrinho" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                     QTDE DE PONTOS
                                 </label>
@@ -189,10 +189,10 @@
                                     <input type="text" id="input-pontos-carrinho" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0"
                                         class="campo-editavel campo-fluxo w-full h-6 px-2 rounded-md text-right font-mono-num text-xs font-bold">
                                 </div>
-                            </div>
+                            </form>
 
                             <!-- Campo Editável 4: Preço de compra -->
-                            <div class="grid grid-cols-12 items-center gap-1">
+                            <form class="form-fluxo grid grid-cols-12 items-center gap-1" data-flow-idx="3" action="javascript:void(0);">
                                 <label for="input-custo-carrinho" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                     PREÇO DE COMPRA
                                 </label>
@@ -201,7 +201,7 @@
                                     <input type="text" id="input-custo-carrinho" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0,00"
                                         class="campo-editavel campo-fluxo w-full h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-xs font-bold">
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
 
@@ -259,7 +259,7 @@
                         </div>
 
                         <!-- Campo Editável 5: Bônus -->
-                        <div class="grid grid-cols-12 items-center gap-1">
+                        <form class="form-fluxo grid grid-cols-12 items-center gap-1" data-flow-idx="4" action="javascript:void(0);">
                             <label for="input-bonus" class="col-span-6 text-[10.5px] font-semibold uppercase text-slate-700 leading-tight">
                                 BÔNUS
                             </label>
@@ -268,7 +268,7 @@
                                     class="campo-editavel campo-fluxo w-full h-6 pl-2 pr-5 rounded-md text-right font-mono-num text-xs font-bold">
                                 <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-bold text-emerald-700">%</span>
                             </div>
-                        </div>
+                        </form>
 
                         <!-- Campo Calculado: Milhas bônus -->
                         <div class="grid grid-cols-12 items-center gap-1">
@@ -569,18 +569,17 @@
                     document.execCommand('copy');
                     showToast(successMsg);
                 } catch (e) {
-                    showToast('NÃO FOI POSSÍVEL COPIAR.');
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(() => showToast(successMsg));
+                    }
+                } finally {
+                    document.body.removeChild(ta);
                 }
-                document.body.removeChild(ta);
             }
 
-            // Listeners de entrada em tempo real
+            // Listeners de cálculo e formatação em tempo real
             el.cpmEstoque.addEventListener('input', () => {
                 maskCurrencyInput(el.cpmEstoque);
-                recalculate();
-            });
-            el.custoCarrinho.addEventListener('input', () => {
-                maskCurrencyInput(el.custoCarrinho);
                 recalculate();
             });
             el.pontosEstoque.addEventListener('input', () => {
@@ -591,43 +590,87 @@
                 maskIntegerInput(el.pontosCarrinho);
                 recalculate();
             });
-            el.bonus.addEventListener('input', () => {
+            el.custoCarrinho.addEventListener('input', () => {
+                maskCurrencyInput(el.custoCarrinho);
                 recalculate();
             });
-            el.data.addEventListener('input', () => {
-                maskDateInput(el.data);
-            });
-            [el.de, el.para].forEach(input => {
-                input.addEventListener('input', recalculate);
-            });
+            el.bonus.addEventListener('input', recalculate);
+            el.data.addEventListener('input', () => maskDateInput(el.data));
+            el.de.addEventListener('input', recalculate);
+            el.para.addEventListener('input', recalculate);
 
-            // Navegação sequencial universal (Safari, Chrome, Brave, Firefox, Opera) ao confirmar/Enter no teclado
+            // Navegação sequencial universal (Safari iOS, Chrome, Brave, Firefox, Opera)
             const editableFlow = Array.from(document.querySelectorAll('.campo-fluxo'));
+            let isAdvancing = false;
+            let lastKeyTime = 0;
+
+            function closeKeyboardAndResetView() {
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                editableFlow.forEach((field) => field.blur());
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
             function focusNextEditable(currentIndex) {
-                const isLast = currentIndex === editableFlow.length - 1;
+                if (isAdvancing) return;
+                isAdvancing = true;
+
+                const isLast = currentIndex >= editableFlow.length - 1;
                 if (isLast) {
-                    editableFlow[currentIndex].blur();
+                    // Último campo (BÔNUS): fecha o teclado numérico e restaura a visão completa da calculadora
+                    closeKeyboardAndResetView();
+                    setTimeout(() => { isAdvancing = false; }, 150);
                     return;
                 }
+
                 const nextInput = editableFlow[currentIndex + 1];
                 nextInput.focus({ preventScroll: false });
                 if (typeof nextInput.setSelectionRange === 'function') {
                     const len = nextInput.value.length;
                     nextInput.setSelectionRange(len, len);
                 }
+
+                setTimeout(() => { isAdvancing = false; }, 120);
             }
 
+            // Intercepta submit do form (quando o botão Go/Next/Enter/Done do teclado submete)
+            document.querySelectorAll('.form-fluxo').forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const idx = parseInt(form.dataset.flowIdx, 10);
+                    if (!Number.isNaN(idx)) focusNextEditable(idx);
+                });
+            });
+
             editableFlow.forEach((input, idx) => {
+                input.addEventListener('input', () => {
+                    lastKeyTime = Date.now();
+                });
+
                 input.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === 'Go' || event.key === 'Next' || event.keyCode === 13) {
+                    if (event.key === 'Enter' || event.key === 'Go' || event.key === 'Next' || event.key === 'Done' || event.keyCode === 13) {
                         event.preventDefault();
                         focusNextEditable(idx);
                     }
                 });
+
                 input.addEventListener('beforeinput', (event) => {
                     if (event.inputType === 'insertLineBreak' || event.inputType === 'insertParagraph') {
                         event.preventDefault();
                         focusNextEditable(idx);
+                    }
+                });
+
+                // Tratamento específico para o botão de confirmação (check ✓) da barra nativa do teclado numérico do iOS Safari
+                input.addEventListener('change', () => {
+                    if (idx === editableFlow.length - 1) {
+                        // Ao confirmar o último campo (BÔNUS), garante que o teclado feche e a tela volte ao topo
+                        setTimeout(() => closeKeyboardAndResetView(), 10);
+                        return;
+                    }
+                    if (!isAdvancing && idx < editableFlow.length - 1 && (Date.now() - lastKeyTime < 1500)) {
+                        setTimeout(() => focusNextEditable(idx), 10);
                     }
                 });
             });
