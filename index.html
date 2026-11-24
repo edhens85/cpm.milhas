@@ -27,6 +27,11 @@
         .input-topo {
             font-size: 11px !important;
         }
+        /* Título fluido adaptado a qualquer largura e navegador móvel sem corte */
+        .titulo-calc {
+            font-size: clamp(9.5px, 2.75vw, 13px);
+            line-height: 1.15;
+        }
         .font-mono-num {
             font-variant-numeric: tabular-nums;
         }
@@ -66,10 +71,10 @@
 
         <!-- Cabeçalho -->
         <header class="bg-slate-900 text-white px-2 sm:px-2.5 py-1.5">
-            <!-- Linha 1: Título maior centralizado e botões Link / Limpar à direita -->
-            <div class="relative flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
-                <div class="flex-1 flex items-center justify-center min-w-0 pr-1">
-                    <h1 class="text-[11.5px] sm:text-[13px] font-black tracking-tight text-center leading-none truncate">
+            <!-- Linha 1: Título centralizado sem corte em qualquer navegador e botões Link / Limpar à direita -->
+            <div class="flex items-center justify-between gap-1.5 mb-1.5 pb-1 border-b border-slate-800">
+                <div class="flex-1 flex items-center justify-center min-w-0">
+                    <h1 class="titulo-calc font-black tracking-tight text-center whitespace-normal break-words">
                         CALCULADORA DE TRANSFERÊNCIA BONIFICADA
                     </h1>
                 </div>
@@ -130,7 +135,7 @@
                             </label>
                             <div class="col-span-6 relative">
                                 <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
-                                <input type="text" id="input-cpm-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
+                                <input type="text" id="input-cpm-estoque" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0,00"
                                     class="campo-editavel campo-fluxo w-full h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-xs font-bold">
                             </div>
                         </div>
@@ -141,7 +146,7 @@
                                 PONTOS USADOS
                             </label>
                             <div class="col-span-6">
-                                <input type="text" id="input-pontos-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0"
+                                <input type="text" id="input-pontos-estoque" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0"
                                     class="campo-editavel campo-fluxo w-full h-6 px-2 rounded-md text-right font-mono-num text-xs font-bold">
                             </div>
                         </div>
@@ -181,7 +186,7 @@
                                     QTDE DE PONTOS
                                 </label>
                                 <div class="col-span-6">
-                                    <input type="text" id="input-pontos-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0"
+                                    <input type="text" id="input-pontos-carrinho" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0"
                                         class="campo-editavel campo-fluxo w-full h-6 px-2 rounded-md text-right font-mono-num text-xs font-bold">
                                 </div>
                             </div>
@@ -193,7 +198,7 @@
                                 </label>
                                 <div class="col-span-6 relative">
                                     <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
-                                    <input type="text" id="input-custo-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
+                                    <input type="text" id="input-custo-carrinho" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="0,00"
                                         class="campo-editavel campo-fluxo w-full h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-xs font-bold">
                                 </div>
                             </div>
@@ -259,7 +264,7 @@
                                 BÔNUS
                             </label>
                             <div class="col-span-6 relative">
-                                <input type="text" id="input-bonus" inputmode="numeric" pattern="[0-9]*" placeholder="0"
+                                <input type="text" id="input-bonus" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" placeholder="0"
                                     class="campo-editavel campo-fluxo w-full h-6 pl-2 pr-5 rounded-md text-right font-mono-num text-xs font-bold">
                                 <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-bold text-emerald-700">%</span>
                             </div>
@@ -586,22 +591,43 @@
                 maskIntegerInput(el.pontosCarrinho);
                 recalculate();
             });
+            el.bonus.addEventListener('input', () => {
+                recalculate();
+            });
             el.data.addEventListener('input', () => {
                 maskDateInput(el.data);
             });
-            [el.bonus, el.de, el.para].forEach((input) => {
+            [el.de, el.para].forEach(input => {
                 input.addEventListener('input', recalculate);
             });
 
-            // Navegação sequencial entre os 5 campos editáveis ao pressionar Enter
+            // Navegação sequencial universal (Safari, Chrome, Brave, Firefox, Opera) ao confirmar/Enter no teclado
             const editableFlow = Array.from(document.querySelectorAll('.campo-fluxo'));
+            function focusNextEditable(currentIndex) {
+                const isLast = currentIndex === editableFlow.length - 1;
+                if (isLast) {
+                    editableFlow[currentIndex].blur();
+                    return;
+                }
+                const nextInput = editableFlow[currentIndex + 1];
+                nextInput.focus({ preventScroll: false });
+                if (typeof nextInput.setSelectionRange === 'function') {
+                    const len = nextInput.value.length;
+                    nextInput.setSelectionRange(len, len);
+                }
+            }
+
             editableFlow.forEach((input, idx) => {
                 input.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter') {
+                    if (event.key === 'Enter' || event.key === 'Go' || event.key === 'Next' || event.keyCode === 13) {
                         event.preventDefault();
-                        const nextInput = editableFlow[(idx + 1) % editableFlow.length];
-                        nextInput.focus();
-                        nextInput.select();
+                        focusNextEditable(idx);
+                    }
+                });
+                input.addEventListener('beforeinput', (event) => {
+                    if (event.inputType === 'insertLineBreak' || event.inputType === 'insertParagraph') {
+                        event.preventDefault();
+                        focusNextEditable(idx);
                     }
                 });
             });
