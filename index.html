@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALCULADORA DE TRANSFERÊNCIA BONIFICADA</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+        input {
+            text-transform: uppercase;
+        }
+        .font-mono-num {
+            font-variant-numeric: tabular-nums;
+        }
+        /* Campos editáveis em verde suave (padrão planilha) */
+        .campo-editavel {
+            background-color: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #064e3b;
+            transition: all 0.15s ease;
+        }
+        .campo-editavel::placeholder {
+            color: #059669;
+            opacity: 0.45;
+        }
+        .campo-editavel:focus {
+            background-color: #ffffff;
+            border-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+            outline: none;
+        }
+        /* Campos de cálculo automático em cinza suave (padrão planilha) */
+        .campo-calculado {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="min-h-[100dvh] py-2 px-2 sm:px-4 flex flex-col justify-start sm:justify-center overflow-x-hidden">
+
+    <div class="w-full max-w-[660px] mx-auto border-2 border-slate-900 rounded-2xl overflow-hidden bg-slate-100 shadow-md">
+
+        <!-- Cabeçalho -->
+        <header class="bg-slate-900 text-white px-2.5 sm:px-3 py-2.5">
+            <!-- Título centralizado -->
+            <div class="flex items-center justify-center gap-1.5 mb-2 pb-1.5 border-b border-slate-800">
+                <div class="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0">
+                    <i class="ph-bold ph-calculator text-sm"></i>
+                </div>
+                <h1 class="text-xs sm:text-sm font-extrabold tracking-tight text-center leading-tight">
+                    CALCULADORA DE TRANSFERÊNCIA BONIFICADA
+                </h1>
+            </div>
+
+            <!-- Linha com De / Para / Data e botões Link / Limpar alinhados à direita -->
+            <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-[11px] text-white">
+                <div class="flex flex-wrap items-center gap-1 sm:gap-1.5 min-w-0">
+                    <span class="text-white font-semibold">DE:</span>
+                    <input type="text" id="input-de" value="LIVELO" maxlength="16"
+                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-xs sm:text-[10px] font-bold text-emerald-300 uppercase w-[4.2rem] sm:w-20 focus:outline-none focus:border-emerald-400">
+                    <i class="ph-bold ph-arrow-right text-white text-[10px] shrink-0"></i>
+                    <span class="text-white font-semibold">PARA:</span>
+                    <input type="text" id="input-para" value="LATAM" maxlength="16"
+                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-xs sm:text-[10px] font-bold text-indigo-300 uppercase w-[4.2rem] sm:w-20 focus:outline-none focus:border-indigo-400">
+                    <span class="text-white font-semibold">DATA:</span>
+                    <input type="text" id="input-data" inputmode="numeric" placeholder="DD/MM/AAAA" maxlength="10"
+                        class="bg-slate-800 border border-slate-700 rounded px-1.5 py-1 sm:py-0.5 text-xs sm:text-[10px] font-mono-num font-bold text-white placeholder-slate-400 w-[5.8rem] sm:w-24 text-center focus:outline-none focus:border-sky-400">
+                </div>
+
+                <!-- Ações: Link e Limpar alinhados à direita -->
+                <div class="flex items-center gap-1.5 shrink-0 ml-auto">
+                    <button type="button" id="btn-link" title="COPIAR LINK COMPARTILHÁVEL ZERADO"
+                        class="h-7 sm:h-6 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-[11px] font-bold uppercase transition flex items-center gap-1 cursor-pointer">
+                        <i class="ph-bold ph-link text-xs"></i>
+                        <span>LINK</span>
+                    </button>
+                    <button type="button" id="btn-limpar" title="ZERAR TODOS OS CAMPOS"
+                        class="h-7 sm:h-6 px-2 rounded-lg bg-slate-800 hover:bg-rose-950/80 active:scale-95 text-slate-200 hover:text-rose-200 border border-slate-700 hover:border-rose-500/40 text-[11px] font-bold uppercase transition flex items-center gap-1 cursor-pointer">
+                        <i class="ph-bold ph-eraser text-xs text-rose-400"></i>
+                        <span>LIMPAR</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Grid Principal: Esquerda (1. Estoque + 2. Carrinho) | Direita (3. Destino) -->
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-2.5 p-2 sm:p-2.5 items-stretch">
+
+            <!-- COLUNA ESQUERDA: ORIGEM -->
+            <div class="space-y-2.5 flex flex-col min-w-0">
+
+                <!-- 1. ESTOQUE -->
+                <section class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs min-w-0">
+                    <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0">1</span>
+                            <h2 class="text-sm font-black uppercase tracking-wider text-slate-900">ESTOQUE</h2>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 sm:space-y-1.5">
+                        <!-- Campo Editável 1: CPM Estoque -->
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <label for="input-cpm-estoque" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                                CPM
+                            </label>
+                            <div class="col-span-6 relative">
+                                <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
+                                <input type="text" id="input-cpm-estoque" inputmode="numeric" placeholder="0,00"
+                                    class="campo-editavel campo-fluxo w-full h-8 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                            </div>
+                        </div>
+
+                        <!-- Campo Editável 2: Pontos usados -->
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <label for="input-pontos-estoque" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                                PONTOS USADOS
+                            </label>
+                            <div class="col-span-6">
+                                <input type="text" id="input-pontos-estoque" inputmode="numeric" placeholder="0"
+                                    class="campo-editavel campo-fluxo w-full h-8 sm:h-7 px-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                            </div>
+                        </div>
+
+                        <!-- Campo Calculado: Subtotal Estoque -->
+                        <div class="grid grid-cols-12 items-center gap-1.5 pt-0.5">
+                            <span class="col-span-6 text-xs sm:text-[13px] font-black uppercase text-slate-800">
+                                SUBTOTAL
+                            </span>
+                            <div class="col-span-6">
+                                <div class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-between font-mono-num text-xs sm:text-[13px] font-black text-slate-900">
+                                    <span class="text-[11px] font-bold text-slate-500">R$</span>
+                                    <span id="out-subtotal-estoque">0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. COMPRA NO CARRINHO -->
+                <section class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs flex-1 flex flex-col justify-between min-w-0">
+                    <div>
+                        <div class="flex items-center justify-between gap-1 mb-2 pb-1.5 border-b border-slate-100">
+                            <div class="flex items-center gap-1 min-w-0">
+                                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-slate-900 text-white text-[10px] sm:text-[11px] font-extrabold flex items-center justify-center shrink-0">2</span>
+                                <h2 class="text-xs sm:text-[13px] font-black uppercase tracking-tight text-slate-900 leading-tight">COMPRA NO CARRINHO</h2>
+                            </div>
+                            <span id="badge-cpm-carrinho" class="text-[9px] sm:text-[10px] font-mono-num font-semibold uppercase text-slate-500 border border-slate-300 rounded-full px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                                CPM R$ 0,00
+                            </span>
+                        </div>
+
+                        <div class="space-y-2 sm:space-y-1.5">
+                            <!-- Campo Editável 3: Qtde de pontos -->
+                            <div class="grid grid-cols-12 items-center gap-1.5">
+                                <label for="input-pontos-carrinho" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                                    QTDE DE PONTOS
+                                </label>
+                                <div class="col-span-6">
+                                    <input type="text" id="input-pontos-carrinho" inputmode="numeric" placeholder="0"
+                                        class="campo-editavel campo-fluxo w-full h-8 sm:h-7 px-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                </div>
+                            </div>
+
+                            <!-- Campo Editável 4: Preço de compra -->
+                            <div class="grid grid-cols-12 items-center gap-1.5">
+                                <label for="input-custo-carrinho" class="col-span-6 text-[11px] font-semibold uppercase text-slate-700">
+                                    PREÇO DE COMPRA
+                                </label>
+                                <div class="col-span-6 relative">
+                                    <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
+                                    <input type="text" id="input-custo-carrinho" inputmode="numeric" placeholder="0,00"
+                                        class="campo-editavel campo-fluxo w-full h-8 sm:h-7 pl-7 pr-2 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campos Calculados: Custo origem e CPM ORIGEM -->
+                    <div class="mt-2 pt-2 border-t border-slate-100 space-y-2 sm:space-y-1.5">
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <span class="col-span-6 text-[11px] font-semibold uppercase text-slate-600">
+                                CUSTO ORIGEM
+                            </span>
+                            <div class="col-span-6">
+                                <div class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-between font-mono-num text-xs font-bold text-slate-700">
+                                    <span class="text-[11px] font-semibold text-slate-400">R$</span>
+                                    <span id="out-custo-origem">0,00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <span class="col-span-6 text-xs sm:text-[13px] font-black uppercase text-slate-900">
+                                CPM ORIGEM
+                            </span>
+                            <div class="col-span-6">
+                                <div class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-between font-mono-num text-xs sm:text-[13px] font-black text-slate-900">
+                                    <span class="text-[11px] font-bold text-slate-500">R$</span>
+                                    <span id="out-cpm-origem">0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- COLUNA DIREITA: 3. DESTINO -->
+            <section class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs flex flex-col justify-between min-w-0">
+                <div>
+                    <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-5 h-5 rounded-md bg-indigo-600 text-white text-[11px] font-extrabold flex items-center justify-center">3</span>
+                            <h2 class="text-sm font-black uppercase tracking-wider text-slate-900">DESTINO</h2>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <!-- Campo Calculado: Milhas recebidas -->
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <span class="col-span-7 text-[11px] font-semibold uppercase text-slate-600">
+                                MILHAS RECEBIDAS
+                            </span>
+                            <div class="col-span-5">
+                                <div id="out-milhas-enviadas"
+                                    class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-end font-mono-num text-xs font-bold">
+                                    0
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campo Editável 5: Bônus -->
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <label for="input-bonus" class="col-span-7 text-[11px] font-semibold uppercase text-slate-700">
+                                BÔNUS
+                            </label>
+                            <div class="col-span-5 relative">
+                                <input type="text" id="input-bonus" inputmode="decimal" placeholder="0"
+                                    class="campo-editavel campo-fluxo w-full h-8 sm:h-7 pl-2 pr-6 rounded-lg text-right font-mono-num text-sm sm:text-xs font-bold">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-emerald-700">%</span>
+                            </div>
+                        </div>
+
+                        <!-- Campo Calculado: Milhas bônus -->
+                        <div class="grid grid-cols-12 items-center gap-1.5">
+                            <span class="col-span-7 text-[11px] font-semibold uppercase text-slate-600">
+                                MILHAS BÔNUS
+                            </span>
+                            <div class="col-span-5">
+                                <div id="out-pontos-bonus"
+                                    class="campo-calculado w-full h-8 sm:h-7 px-2 rounded-lg flex items-center justify-end font-mono-num text-xs font-bold text-emerald-700">
+                                    0
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campo Calculado: TOTAL DE MILHAS -->
+                        <div class="grid grid-cols-12 items-center gap-1.5 pt-0.5">
+                            <div class="col-span-7">
+                                <span class="text-xs sm:text-[13px] font-black uppercase text-slate-900 block">TOTAL DE MILHAS</span>
+                            </div>
+                            <div class="col-span-5">
+                                <div id="out-total-milhas"
+                                    class="campo-calculado w-full h-8 px-2 rounded-lg flex items-center justify-end font-mono-num text-xs sm:text-[13px] font-black text-indigo-800">
+                                    0
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESULTADO EFETIVO: CPM FINAL em roxo claro -->
+                <div class="mt-3 pt-2.5 border-t border-purple-200/70">
+                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 text-slate-900 shadow-2xs">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-purple-800">
+                                RESULTADO EFETIVO
+                            </span>
+                        </div>
+                        <div class="flex items-baseline justify-between gap-2">
+                            <span class="text-sm sm:text-base font-black uppercase tracking-wide text-purple-950">
+                                CPM FINAL
+                            </span>
+                            <div class="text-right">
+                                <span id="out-cpm-final" class="font-mono-num text-3xl sm:text-[32px] font-black tracking-tight text-purple-800 block leading-none">
+                                    R$ 0,00
+                                </span>
+                                <span class="text-[10px] font-semibold uppercase text-purple-700/85">
+                                    POR MILHEIRO
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast de feedback -->
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs font-bold uppercase px-3.5 py-2 rounded-full shadow-lg border border-slate-700 flex items-center gap-1.5 opacity-0 pointer-events-none transition-all duration-200 z-50">
+        <i class="ph-fill ph-check-circle text-emerald-400 text-sm"></i>
+        <span id="toast-msg">LINK COPIADO!</span>
+    </div>
+
+    <script>
+        (function () {
+            // Valores padrão com todos os campos digitáveis zerados para preenchimento imediato
+            const DEFAULT_STATE = {
+                de: 'LIVELO',
+                para: 'LATAM',
+                data: '',
+                cpmEstoque: 0,
+                pontosEstoque: 0,
+                pontosCarrinho: 0,
+                custoCarrinho: 0,
+                bonus: 0
+            };
+
+            const el = {
+                de: document.getElementById('input-de'),
+                para: document.getElementById('input-para'),
+                data: document.getElementById('input-data'),
+                cpmEstoque: document.getElementById('input-cpm-estoque'),
+                pontosEstoque: document.getElementById('input-pontos-estoque'),
+                pontosCarrinho: document.getElementById('input-pontos-carrinho'),
+                custoCarrinho: document.getElementById('input-custo-carrinho'),
+                bonus: document.getElementById('input-bonus'),
+                outSubtotalEstoque: document.getElementById('out-subtotal-estoque'),
+                badgeCpmCarrinho: document.getElementById('badge-cpm-carrinho'),
+                outCpmOrigem: document.getElementById('out-cpm-origem'),
+                outCustoOrigem: document.getElementById('out-custo-origem'),
+                outMilhasEnviadas: document.getElementById('out-milhas-enviadas'),
+                outPontosBonus: document.getElementById('out-pontos-bonus'),
+                outTotalMilhas: document.getElementById('out-total-milhas'),
+                outCpmFinal: document.getElementById('out-cpm-final')
+            };
+
+            // Formatadores pt-BR
+            function fmtNum(val, decimals = 2) {
+                if (!Number.isFinite(val)) val = 0;
+                return val.toLocaleString('pt-BR', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                });
+            }
+
+            function fmtInt(val) {
+                if (!Number.isFinite(val)) val = 0;
+                return Math.round(val).toLocaleString('pt-BR');
+            }
+
+            // Parser de inteiro com separador de milhar
+            function parseIntBR(str) {
+                if (!str) return 0;
+                const digits = String(str).replace(/\D/g, '');
+                return digits ? parseInt(digits, 10) : 0;
+            }
+
+            // Parser decimal flexível (aceita vírgula ou ponto)
+            function parseDecBR(str) {
+                if (!str) return 0;
+                let clean = String(str).trim().replace(/[^\d.,]/g, '');
+                if (!clean) return 0;
+                if (clean.includes(',') && clean.includes('.')) {
+                    clean = clean.replace(/\./g, '').replace(',', '.');
+                } else if (clean.includes(',')) {
+                    clean = clean.replace(',', '.');
+                } else {
+                    const parts = clean.split('.');
+                    if (parts.length > 1 && parts[parts.length - 1].length === 3) {
+                        clean = parts.join('');
+                    }
+                }
+                const num = parseFloat(clean);
+                return Number.isFinite(num) ? num : 0;
+            }
+
+            // Formata entrada inteira ao digitar
+            function maskIntegerInput(input) {
+                const rawDigits = input.value.replace(/\D/g, '');
+                input.value = rawDigits ? parseInt(rawDigits, 10).toLocaleString('pt-BR') : '';
+            }
+
+            // Formata entrada monetária (R$) automaticamente com vírgula decimal e ponto de milhar
+            function maskCurrencyInput(input) {
+                const rawDigits = input.value.replace(/\D/g, '');
+                if (!rawDigits) {
+                    input.value = '';
+                    return;
+                }
+                const cents = parseInt(rawDigits, 10) / 100;
+                input.value = fmtNum(cents, 2);
+            }
+
+            // Formata entrada de data DD/MM/AAAA automaticamente
+            function maskDateInput(input) {
+                const digits = input.value.replace(/\D/g, '').slice(0, 8);
+                if (digits.length <= 2) {
+                    input.value = digits;
+                } else if (digits.length <= 4) {
+                    input.value = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+                } else {
+                    input.value = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+                }
+            }
+
+            // Cálculo principal seguindo exatamente as fórmulas da planilha
+            function recalculate() {
+                const cpmEst = parseDecBR(el.cpmEstoque.value);
+                const ptsEst = parseIntBR(el.pontosEstoque.value);
+                const ptsCar = parseIntBR(el.pontosCarrinho.value);
+                const custoCar = parseDecBR(el.custoCarrinho.value);
+                const bonus = parseDecBR(el.bonus.value);
+
+                // 1. Estoque: Subtotal = (Pontos Estoque / 1000) * CPM Estoque
+                const subtotalEst = (ptsEst / 1000) * cpmEst;
+
+                // 2. Compra no Carrinho & Consolidação Origem
+                const cpmCar = ptsCar > 0 ? (custoCar / ptsCar) * 1000 : 0;
+                const custoOrigem = subtotalEst + custoCar;
+                const ptsEnviados = ptsEst + ptsCar;
+                const cpmOrigem = ptsEnviados > 0 ? (custoOrigem / ptsEnviados) * 1000 : 0;
+
+                // 3. Destino
+                const ptsBonus = ptsEnviados * (bonus / 100);
+                const totalMilhas = ptsEnviados + ptsBonus;
+                const cpmFinal = totalMilhas > 0 ? (custoOrigem / totalMilhas) * 1000 : 0;
+
+                // Atualização da UI
+                el.outSubtotalEstoque.textContent = fmtNum(subtotalEst);
+                el.badgeCpmCarrinho.textContent = `CPM R$ ${fmtNum(cpmCar)}`;
+                el.outCustoOrigem.textContent = fmtNum(custoOrigem);
+                el.outCpmOrigem.textContent = fmtNum(cpmOrigem);
+
+                el.outMilhasEnviadas.textContent = fmtInt(ptsEnviados);
+                el.outPontosBonus.textContent = fmtInt(ptsBonus);
+                el.outTotalMilhas.textContent = fmtInt(totalMilhas);
+                el.outCpmFinal.textContent = `R$ ${fmtNum(cpmFinal)}`;
+
+                return {
+                    de: (el.de.value || 'ORIGEM').toUpperCase(),
+                    para: (el.para.value || 'DESTINO').toUpperCase(),
+                    data: el.data.value.trim(),
+                    cpmEst, ptsEst, subtotalEst,
+                    ptsCar, custoCar, custoOrigem, ptsEnviados, cpmOrigem,
+                    bonus, ptsBonus, totalMilhas, cpmFinal
+                };
+            }
+
+            // Aplica valores nos campos
+            function applyValues(data) {
+                el.de.value = data.de || 'LIVELO';
+                el.para.value = data.para || 'LATAM';
+                el.data.value = data.data || '';
+                el.cpmEstoque.value = data.cpmEstoque > 0 ? fmtNum(data.cpmEstoque) : '';
+                el.pontosEstoque.value = data.pontosEstoque > 0 ? fmtInt(data.pontosEstoque) : '';
+                el.pontosCarrinho.value = data.pontosCarrinho > 0 ? fmtInt(data.pontosCarrinho) : '';
+                el.custoCarrinho.value = data.custoCarrinho > 0 ? fmtNum(data.custoCarrinho) : '';
+                el.bonus.value = data.bonus > 0 ? String(data.bonus).replace('.', ',') : '';
+                recalculate();
+            }
+
+            // Limpa todos os campos
+            function clearAll() {
+                el.cpmEstoque.value = '';
+                el.pontosEstoque.value = '';
+                el.pontosCarrinho.value = '';
+                el.custoCarrinho.value = '';
+                el.bonus.value = '';
+                el.data.value = '';
+                recalculate();
+                el.cpmEstoque.focus();
+            }
+
+            // Carrega parâmetros da URL ou inicia zerado
+            function loadFromURL() {
+                const params = new URLSearchParams(window.location.search);
+                const de = params.get('de') || DEFAULT_STATE.de;
+                const para = params.get('para') || DEFAULT_STATE.para;
+                const data = params.get('d') || params.get('data') || '';
+
+                if (params.get('zerado') === '1' || (!params.has('ptsEst') && !params.has('ptsCar'))) {
+                    applyValues({
+                        de,
+                        para,
+                        data,
+                        cpmEstoque: 0,
+                        pontosEstoque: 0,
+                        pontosCarrinho: 0,
+                        custoCarrinho: 0,
+                        bonus: 0
+                    });
+                    return;
+                }
+                applyValues({
+                    de,
+                    para,
+                    data,
+                    cpmEstoque: parseFloat(params.get('cpmEst')) || 0,
+                    pontosEstoque: parseInt(params.get('ptsEst'), 10) || 0,
+                    pontosCarrinho: parseInt(params.get('ptsCar'), 10) || 0,
+                    custoCarrinho: parseFloat(params.get('custoCar')) || 0,
+                    bonus: parseFloat(params.get('bonus')) || 0
+                });
+            }
+
+            // Toast notification
+            let toastTimer = null;
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                const toastMsg = document.getElementById('toast-msg');
+                if (!toast || !toastMsg) return;
+                toastMsg.textContent = msg;
+                toast.classList.remove('opacity-0');
+                toast.classList.add('opacity-100');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0');
+                }, 2200);
+            }
+
+            // Cópia compatível com iframe e navegadores modernos
+            function copyText(text, successMsg) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(successMsg);
+                } catch (e) {
+                    showToast('NÃO FOI POSSÍVEL COPIAR.');
+                }
+                document.body.removeChild(ta);
+            }
+
+            // Listeners de entrada em tempo real
+            el.cpmEstoque.addEventListener('input', () => {
+                maskCurrencyInput(el.cpmEstoque);
+                recalculate();
+            });
+            el.custoCarrinho.addEventListener('input', () => {
+                maskCurrencyInput(el.custoCarrinho);
+                recalculate();
+            });
+            el.pontosEstoque.addEventListener('input', () => {
+                maskIntegerInput(el.pontosEstoque);
+                recalculate();
+            });
+            el.pontosCarrinho.addEventListener('input', () => {
+                maskIntegerInput(el.pontosCarrinho);
+                recalculate();
+            });
+            el.data.addEventListener('input', () => {
+                maskDateInput(el.data);
+            });
+            [el.bonus, el.de, el.para].forEach((input) => {
+                input.addEventListener('input', recalculate);
+            });
+
+            // Navegação sequencial entre os 5 campos editáveis ao pressionar Enter
+            const editableFlow = Array.from(document.querySelectorAll('.campo-fluxo'));
+            editableFlow.forEach((input, idx) => {
+                input.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        const nextInput = editableFlow[(idx + 1) % editableFlow.length];
+                        nextInput.focus();
+                        nextInput.select();
+                    }
+                });
+            });
+
+            // Botões de ação
+            document.getElementById('btn-link')?.addEventListener('click', () => {
+                const d = recalculate();
+                // Gera URL mais curta possível (como já abre zerada por padrão, omite parâmetros redundantes)
+                const baseHref = window.location.href.split('?')[0].split('#')[0];
+                const url = new URL(baseHref && baseHref.startsWith('http') ? baseHref : 'https://calculadora-transferencia-bonificada.app/');
+
+                if (d.de && d.de !== DEFAULT_STATE.de) {
+                    url.searchParams.set('de', d.de);
+                }
+                if (d.para && d.para !== DEFAULT_STATE.para) {
+                    url.searchParams.set('para', d.para);
+                }
+                if (d.data) {
+                    url.searchParams.set('d', d.data);
+                }
+
+                // Remove barra final se não houver query string para deixar ainda mais limpo
+                const shortUrl = url.search ? url.toString() : url.toString().replace(/\/$/, '');
+                copyText(shortUrl, 'LINK CURTO COPIADO!');
+            });
+
+            document.getElementById('btn-limpar')?.addEventListener('click', () => {
+                clearAll();
+                showToast('CAMPOS ZERADOS.');
+            });
+
+            // Inicialização
+            loadFromURL();
+        })();
+    </script>
+</body>
+</html>
