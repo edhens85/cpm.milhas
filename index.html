@@ -18,15 +18,14 @@
             background-color: #f1f5f9;
             color: #0f172a;
             text-transform: uppercase;
+            touch-action: manipulation;
         }
         input {
             text-transform: uppercase;
-            font-size: 16px !important; /* Evita zoom automático do iOS Safari ao tocar no campo */
+            font-size: 12px !important;
         }
-        @media (min-width: 640px) {
-            input {
-                font-size: 12px !important;
-            }
+        .input-topo {
+            font-size: 11px !important;
         }
         .font-mono-num {
             font-variant-numeric: tabular-nums;
@@ -67,14 +66,10 @@
 
         <!-- Cabeçalho -->
         <header class="bg-slate-900 text-white px-2 sm:px-2.5 py-1.5">
-            <!-- Linha 1: Título centralizado e botões Link / Limpar no canto superior direito -->
-            <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-1 mb-1.5 pb-1 border-b border-slate-800">
-                <div aria-hidden="true"></div>
-                <div class="flex items-center justify-center gap-1 min-w-0">
-                    <div class="w-4 h-4 rounded bg-emerald-500/20 border border-emerald-400/30 hidden sm:flex items-center justify-center text-emerald-400 shrink-0">
-                        <i class="ph-bold ph-calculator text-[11px]"></i>
-                    </div>
-                    <h1 class="text-[9.5px] sm:text-[11px] font-extrabold tracking-tight text-center leading-tight">
+            <!-- Linha 1: Título maior centralizado e botões Link / Limpar à direita -->
+            <div class="relative flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
+                <div class="flex-1 flex items-center justify-center min-w-0 pr-1">
+                    <h1 class="text-[11.5px] sm:text-[13px] font-black tracking-tight text-center leading-none truncate">
                         CALCULADORA DE TRANSFERÊNCIA BONIFICADA
                     </h1>
                 </div>
@@ -92,22 +87,22 @@
                 </div>
             </div>
 
-            <!-- Linha 2: DE, PARA e DATA em linha única sem quebrar no celular -->
-            <div class="flex items-center justify-between gap-1 text-[10px] text-white">
-                <div class="flex items-center gap-1 min-w-0">
+            <!-- Linha 2: DE, PARA e DATA ajustados para caber sem extrapolar ou cortar -->
+            <div class="grid grid-cols-12 items-center gap-1 text-[10px] text-white">
+                <div class="col-span-4 flex items-center gap-1 min-w-0">
                     <span class="text-white font-semibold shrink-0">DE:</span>
-                    <input type="text" id="input-de" value="LIVELO" maxlength="16"
-                        class="bg-slate-800 border border-slate-700 rounded px-1 py-0 text-base sm:text-[10px] font-bold text-emerald-300 uppercase w-[4rem] sm:w-18 text-center leading-tight focus:outline-none focus:border-emerald-400">
+                    <input type="text" id="input-de" value="LIVELO" maxlength="10"
+                        class="input-topo bg-slate-800 border border-slate-700 rounded px-1 h-5 font-bold text-emerald-300 uppercase w-full min-w-0 text-center leading-none focus:outline-none focus:border-emerald-400">
                 </div>
-                <div class="flex items-center gap-1 min-w-0">
+                <div class="col-span-4 flex items-center gap-1 min-w-0">
                     <span class="text-white font-semibold shrink-0">PARA:</span>
-                    <input type="text" id="input-para" value="LATAM" maxlength="16"
-                        class="bg-slate-800 border border-slate-700 rounded px-1 py-0 text-base sm:text-[10px] font-bold text-indigo-300 uppercase w-[4rem] sm:w-18 text-center leading-tight focus:outline-none focus:border-indigo-400">
+                    <input type="text" id="input-para" value="LATAM" maxlength="10"
+                        class="input-topo bg-slate-800 border border-slate-700 rounded px-1 h-5 font-bold text-indigo-300 uppercase w-full min-w-0 text-center leading-none focus:outline-none focus:border-indigo-400">
                 </div>
-                <div class="flex items-center gap-1 min-w-0">
+                <div class="col-span-4 flex items-center gap-1 min-w-0">
                     <span class="text-white font-semibold shrink-0">DATA:</span>
                     <input type="text" id="input-data" inputmode="numeric" pattern="[0-9]*" placeholder="DD/MM/AAAA" maxlength="10"
-                        class="bg-slate-800 border border-slate-700 rounded px-1 py-0 text-base sm:text-[10px] font-mono-num font-bold text-white placeholder-slate-400 w-[6rem] sm:w-22 text-center leading-tight focus:outline-none focus:border-sky-400">
+                        class="input-topo bg-slate-800 border border-slate-700 rounded px-1 h-5 font-mono-num font-bold text-white placeholder-slate-400 w-full min-w-0 text-center leading-none focus:outline-none focus:border-sky-400">
                 </div>
             </div>
         </header>
@@ -136,7 +131,7 @@
                             <div class="col-span-6 relative">
                                 <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
                                 <input type="text" id="input-cpm-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
-                                    class="campo-editavel campo-fluxo w-full h-7 sm:h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
+                                    class="campo-editavel campo-fluxo w-full h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-xs font-bold">
                             </div>
                         </div>
 
@@ -147,7 +142,7 @@
                             </label>
                             <div class="col-span-6">
                                 <input type="text" id="input-pontos-estoque" inputmode="numeric" pattern="[0-9]*" placeholder="0"
-                                    class="campo-editavel campo-fluxo w-full h-7 sm:h-6 px-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
+                                    class="campo-editavel campo-fluxo w-full h-6 px-2 rounded-md text-right font-mono-num text-xs font-bold">
                             </div>
                         </div>
 
@@ -157,7 +152,7 @@
                                 SUBTOTAL
                             </span>
                             <div class="col-span-6">
-                                <div class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-black text-slate-900">
+                                <div class="campo-calculado w-full h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-black text-slate-900">
                                     <span class="text-[10px] font-bold text-slate-500">R$</span>
                                     <span id="out-subtotal-estoque">0,00</span>
                                 </div>
@@ -187,7 +182,7 @@
                                 </label>
                                 <div class="col-span-6">
                                     <input type="text" id="input-pontos-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0"
-                                        class="campo-editavel campo-fluxo w-full h-7 sm:h-6 px-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
+                                        class="campo-editavel campo-fluxo w-full h-6 px-2 rounded-md text-right font-mono-num text-xs font-bold">
                                 </div>
                             </div>
 
@@ -199,7 +194,7 @@
                                 <div class="col-span-6 relative">
                                     <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-emerald-700/80 pointer-events-none">R$</span>
                                     <input type="text" id="input-custo-carrinho" inputmode="numeric" pattern="[0-9]*" placeholder="0,00"
-                                        class="campo-editavel campo-fluxo w-full h-7 sm:h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
+                                        class="campo-editavel campo-fluxo w-full h-6 pl-6 pr-2 rounded-md text-right font-mono-num text-xs font-bold">
                                 </div>
                             </div>
                         </div>
@@ -212,7 +207,7 @@
                                 CUSTO ORIGEM
                             </span>
                             <div class="col-span-6">
-                                <div class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-bold text-slate-700">
+                                <div class="campo-calculado w-full h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-bold text-slate-700">
                                     <span class="text-[10px] font-semibold text-slate-400">R$</span>
                                     <span id="out-custo-origem">0,00</span>
                                 </div>
@@ -224,7 +219,7 @@
                                 CPM ORIGEM
                             </span>
                             <div class="col-span-6">
-                                <div class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-black text-slate-900">
+                                <div class="campo-calculado w-full h-6 px-2 rounded-md flex items-center justify-between font-mono-num text-xs font-black text-slate-900">
                                     <span class="text-[10px] font-bold text-slate-500">R$</span>
                                     <span id="out-cpm-origem">0,00</span>
                                 </div>
@@ -252,7 +247,7 @@
                             </span>
                             <div class="col-span-6">
                                 <div id="out-milhas-enviadas"
-                                    class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-bold">
+                                    class="campo-calculado w-full h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-bold">
                                     0
                                 </div>
                             </div>
@@ -265,7 +260,7 @@
                             </label>
                             <div class="col-span-6 relative">
                                 <input type="text" id="input-bonus" inputmode="numeric" pattern="[0-9]*" placeholder="0"
-                                    class="campo-editavel campo-fluxo w-full h-7 sm:h-6 pl-2 pr-5 rounded-md text-right font-mono-num text-base sm:text-xs font-bold">
+                                    class="campo-editavel campo-fluxo w-full h-6 pl-2 pr-5 rounded-md text-right font-mono-num text-xs font-bold">
                                 <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-bold text-emerald-700">%</span>
                             </div>
                         </div>
@@ -277,7 +272,7 @@
                             </span>
                             <div class="col-span-6">
                                 <div id="out-pontos-bonus"
-                                    class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-bold text-emerald-700">
+                                    class="campo-calculado w-full h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-bold text-emerald-700">
                                     0
                                 </div>
                             </div>
@@ -290,7 +285,7 @@
                             </div>
                             <div class="col-span-6">
                                 <div id="out-total-milhas"
-                                    class="campo-calculado w-full h-7 sm:h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-black text-indigo-800">
+                                    class="campo-calculado w-full h-6 px-2 rounded-md flex items-center justify-end font-mono-num text-xs font-black text-indigo-800">
                                     0
                                 </div>
                             </div>
@@ -324,6 +319,13 @@
             </section>
 
         </main>
+
+        <!-- Rodapé interno -->
+        <footer class="px-2 pb-1.5 pt-0.5 text-center">
+            <p class="text-[9px] font-semibold tracking-wider text-slate-400 uppercase">
+                DESENVOLVIDO POR: EDUARDO HENRIQUE DE SOUZA
+            </p>
+        </footer>
     </div>
 
     <!-- Toast de feedback -->
